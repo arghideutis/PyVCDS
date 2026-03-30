@@ -1,3 +1,5 @@
+[forked from https://github.com/I-CAN-hack/pq-flasher/tree/master]
+
 # PyVCDS
 
 ARCHIVAL NOTICE: Development is indefinitely suspended as I no longer own a vehicle for testing against. Feel free to fork this or use it as a starting point for a different implementation.
