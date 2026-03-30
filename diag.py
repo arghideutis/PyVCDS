@@ -82,11 +82,15 @@ def main():
     with obd2.OBD2Interface(sock) as obd:
       status = obd.readPID(1, 1) #check DTC count first.
       for k in status:
-        if k[0] & 0xef == 0:
+        if status[k][2] & 0x7f == 0:
           print("{}: No DTCs to display".format(hex(k)))
         else:
-          l = k[0] & 0xef
-          dtcs = obd.readPID(3, 0, k)[k] #PID is spurrious, just to make python happy.
+          l = status[k][2] & 0x7f
+          dtc_resp = obd.readPID(3, 0, k - 8) #PID is spurrious, just to make python happy. k-8 converts response addr to request addr.
+          if dtc_resp is None or k not in dtc_resp:
+            print("{}: Failed to read DTCs".format(hex(k)))
+            continue
+          dtcs = dtc_resp[k][1:] #skip service response byte (0x43)
           assert len(dtcs) >= 2 * l, "Not enough DTC data?" #each DTC is 2 bytes. TODO: check pending DTCs?
           for i in range(0, l*2, 2):
             dtc = obd2.OBD2DTC.getDTCFromBytes(dtcs[i:i+2])
