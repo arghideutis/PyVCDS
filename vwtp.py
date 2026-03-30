@@ -202,9 +202,9 @@ class VWTPConnection:
     if not self._open and not blob[0] == 0xA8: #ignore this for "disconnect" messages
       raise VWTPException("Attempted to write to closed connection")
     if self.tx:
-      frame = can.Message(arbitration_id=self.tx, data=blob, extended_id=False)
+      frame = can.Message(arbitration_id=self.tx, data=blob, is_extended_id=False)
     else:
-      frame = can.Message(arbitration_id=0x200, data=blob, extended_id=False)
+      frame = can.Message(arbitration_id=0x200, data=blob, is_extended_id=False)
     self.stack.send(frame)
 
   def _sendblk(self, blk):

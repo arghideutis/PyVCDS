@@ -8,6 +8,7 @@ __pycache__/
 pcaps/
 candleLight/
 vag-diag-sim/
+venv/
 #because the bus interface name can vary between contributors.
 config.json
 #to prevent accidentally committing personal extensions.

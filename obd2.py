@@ -212,6 +212,8 @@ class OBD2Interface:
     self.socket = socket
     self.recvthread.start()
     resp = self.readPID(1, 0) #Supported PIDs
+    if resp is None:
+      raise ConnectionError("No ECU responded to OBD2 supported PIDs request. Check CAN bus connection.")
     for k,v in resp.items():
       pids = {} #sparse mapping of present PIDs. content doesn't matter, just used as a sparse list.
       pack = struct.unpack(">I", v[3:8])[0]
@@ -263,7 +265,7 @@ class OBD2Interface:
           util.log(6,dat)
           #this configures flow control to be as minimal as possible:
           #unlimited block size (don't expect any ACKs), and a frame interval of 0ms (buffers be fast. and *very* deep.)
-          flow = can.Message(arbitration_id=(rx - 8),data=[0x30,0,0,0x55,0x55,0x55,0x55,0x55],extended_id=False)
+          flow = can.Message(arbitration_id=(rx - 8),data=[0x30,0,0,0x55,0x55,0x55,0x55,0x55],is_extended_id=False)
           util.log(5,"sending flow control frame...")
           self.socket.send(flow) #kick out the flow control frame to tell the ECU that.
         else: #short frame or "uncaught" frame, <8 bytes.
@@ -302,7 +304,7 @@ class OBD2Interface:
     dat[0] = len(data)
     for i in range(len(data)):
       dat[i+1] = data[i]
-    msg = can.Message(arbitration_id=tx, extended_id=False, data=dat)
+    msg = can.Message(arbitration_id=tx, is_extended_id=False, data=dat)
     self.socket.send(msg)
 
   def _get(self, q, timeout=.1):
