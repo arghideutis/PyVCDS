@@ -70,7 +70,7 @@ requests = {
 "readMemoryByAddress": KWPRequest(0x23), #UDS Supported
 "UDSReadScalingDataByIdentifier": KWPRequest(0x24),
 "setDataRates": KWPRequest(0x26),
-"securityAccess": KWPRequest(0x27, "Bs" #UDS supported, param 0x1 is "request seed"
+"securityAccess": KWPRequest(0x27, "Bs"), #UDS supported, param 0x1 is "request seed"
 "UDSauthentication": KWPRequest(0x29), #Is UDS, or control flow "on" in DaimerChrysler KWP2000 stuff.
 "UDSReadDataByIdentifierPeriodic": KWPRequest(0x2A), 
 "DynamicallyDefineLocalIdentifier": KWPRequest(0x2C), #UDS supported

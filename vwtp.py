@@ -387,10 +387,10 @@ class VWTPStack:
       frame = [None] * 7
       frame[0] = dest
       frame[1] = 0xC0 #setup request
-      frame[2] = 0
-      frame[3] = 0x10 #high nibble of high byte set to invalid
-      frame[4] = rx & 255 #low byte of address
-      frame[5] = (rx / 256) & 255 #high nibble, 0x300-310 are the usually seen ones
+      frame[2] = rx & 255 #low byte of RX address
+      frame[3] = (rx // 256) & 255 #high byte of RX address
+      frame[4] = 0
+      frame[5] = 0x10 #high nibble of high byte set to invalid (let ECU pick TX)
       frame[6] = proto #default is KWP transport
       msg = can.Message(arbitration_id=0x200, data=frame, is_extended_id=False)
       self.send(msg)
